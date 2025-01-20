@@ -36,5 +36,5 @@
 - Games: M2M
 - Ordered At: DateField
 - Paid: Boolean
-- Total Price
+- Total Price: Number
 - Key: CharField
