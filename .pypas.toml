@@ -1,0 +1,9 @@
+slug = "gameside"
+bundle = [
+    "docs/README.pdf",
+    "tests/*.py",
+    "fixtures/*.json",
+    "requirements.txt",
+    "justfile",
+    "pytest.ini",
+]
