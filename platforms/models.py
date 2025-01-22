@@ -6,3 +6,6 @@ class Platform(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     logo = models.ImageField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
