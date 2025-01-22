@@ -1,9 +1,13 @@
-from django.shortcuts import render  # noqa
+from django.http import HttpResponse
+
+from .models import Platform
 
 
 def platform_list(request):
-    pass
+    platforms = Platform.objects.all()
+    return HttpResponse()
 
 
 def platform_detail(request, platform_slug):
-    pass
+    platform = Platform.objects.get(slug=platform_slug)
+    return HttpResponse()
