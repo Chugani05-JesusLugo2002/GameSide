@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+from .models import Platform
+
+
+def platform_list(request):
+    platforms = Platform.objects.all()
+    return HttpResponse()
+
+
+def platform_detail(request, platform_slug):
+    platform = Platform.objects.get(slug=platform_slug)
+    return HttpResponse()

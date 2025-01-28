@@ -3,7 +3,14 @@ from django.db import models
 
 
 class Category(models.Model):
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+
     name = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     color = ColorField(blank=True, default='#ffffff')
+
+    def __str__(self):
+        return self.name
