@@ -8,7 +8,7 @@ pip-cmd := shell('if [ -x "$(command -v uv)" ]; then echo "uv pip"; else echo "p
 # ==============================================================================
 
 # Launch development server
-runserver: check-venv
+runserver: check-venv kill-runservers
     ./manage.py runserver
 
 # Launch Django interactive shell
@@ -127,27 +127,49 @@ rq: check-venv redis
 dump-data: gen-data
     #!/usr/bin/env bash
     mkdir -p fixtures
-    echo Not yet implemented!
+    ./manage.py dumpdata --format json --indent 2 auth.User -o fixtures/auth.json
+    for model in users categories platforms games orders; do
+        ./manage.py dumpdata --format json --indent 2 $model -o fixtures/$model.json
+    done
 
 # Clean data
 [private]
 clean-data:
     #!/usr/bin/env bash
-    ./manage.py shell -c '
-    print("Not yet implemented!")
-    ' 
+    for table in categories_category games_game games_review orders_order platforms_platform users_token; do
+        sqlite3 db.sqlite3 "DELETE FROM $table; UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='$table';"
+    done
+    sqlite3 db.sqlite3 "DELETE FROM auth_user WHERE is_superuser=0; UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='auth_user';"
 
-# Show current users on database → role = [STUDENT|TEACHER]
-show-users role:
+# Show current users on database
+show-users:
     #!/usr/bin/env bash
     ./manage.py shell -c '
-    print("Not yet implemented!")
+    from django.contrib.auth.models import User
+    
+    for user in User.objects.exclude(is_superuser=True):
+        print(user.username)
     ' 
 
 # Load fixtures into database
 load-data: check-venv clean-data
     #!/usr/bin/env bash
-    echo Not yet implemented!
+    for model in auth users categories platforms games orders; do
+        ./manage.py loaddata fixtures/$model.json
+    done
+    echo ---------------------------
+    echo ↓ Users with password: 1234
+    echo ---------------------------
+    just show-users
+
+# Kill all Django runserver processes
+[private]
+kill-runservers:
+    #!/usr/bin/env bash
+    for pid in $(ps aux | grep '[Pp]ython.*manage.py runserver' | awk '{ print $2 }')
+    do
+        kill -9 $pid
+    done
 
 # ==============================================================================
 # MISC RECIPES

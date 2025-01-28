@@ -1,0 +1,102 @@
+[
+{
+  "model": "platforms.platform",
+  "pk": 1,
+  "fields": {
+    "name": "Rather",
+    "slug": "rather",
+    "description": "Wonder show marriage lose possible. Interesting hospital effect.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 2,
+  "fields": {
+    "name": "Wrong",
+    "slug": "wrong",
+    "description": "Mouth within garden southern traditional. Agent long course property positive. Ability tree child person admit.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 3,
+  "fields": {
+    "name": "Involve",
+    "slug": "involve",
+    "description": "Something half certain save. Other daughter throughout use listen politics. Discussion model foreign police industry.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 4,
+  "fields": {
+    "name": "Seek",
+    "slug": "seek",
+    "description": "Something couple why eye. Chance possible Mr old. Trouble least believe everybody remain arm forward.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 5,
+  "fields": {
+    "name": "How",
+    "slug": "how",
+    "description": "Conference by lawyer mind author. Tree response pick perform tough. Listen good ground lose which. Compare attorney myself through help cover way.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 6,
+  "fields": {
+    "name": "Consumer",
+    "slug": "consumer",
+    "description": "On play power attention everybody result play yet. During PM friend such able. President forward news child couple certainly old man. Such rest look law land debate.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 7,
+  "fields": {
+    "name": "War",
+    "slug": "war",
+    "description": "Home water shake skill science. Know behavior sport site something others me even. Offer various check security simple stop. Method success strategy civil professional according guy recognize.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 8,
+  "fields": {
+    "name": "Gun",
+    "slug": "gun",
+    "description": "Area act blood two. National fund reduce any bill go few everybody. Return check create within drive threat TV key.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 9,
+  "fields": {
+    "name": "Their",
+    "slug": "their",
+    "description": "Beautiful treatment with feeling part human as minute. Also raise several. Stage act this magazine.",
+    "logo": "logos/default.jpg"
+  }
+},
+{
+  "model": "platforms.platform",
+  "pk": 10,
+  "fields": {
+    "name": "Whatever",
+    "slug": "whatever",
+    "description": "Avoid entire though politics box not. Responsibility later religious someone. Tell them pattern.",
+    "logo": "logos/default.jpg"
+  }
+}
+]

@@ -1,0 +1,102 @@
+[
+{
+  "model": "categories.category",
+  "pk": 1,
+  "fields": {
+    "name": "Nation",
+    "slug": "nation",
+    "description": "Total picture say blood word. Since less bank. Blue stock whether special.",
+    "color": "#570d2a"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 2,
+  "fields": {
+    "name": "System",
+    "slug": "system",
+    "description": "Stop ball none drive. System can simple share worker never story.",
+    "color": "#eb5bac"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 3,
+  "fields": {
+    "name": "Check",
+    "slug": "check",
+    "description": "Newspaper only medical information production development three. Fish unit time cover pressure far near.",
+    "color": "#53ca35"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 4,
+  "fields": {
+    "name": "Again",
+    "slug": "again",
+    "description": "Change become evening field. Program positive camera one daughter now protect. More board direction.",
+    "color": "#a7f4ae"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 5,
+  "fields": {
+    "name": "Fly",
+    "slug": "fly",
+    "description": "According it fall enough strategy instead. Religious writer among listen great. Attention sound seat local find company nearly yet.",
+    "color": "#88b364"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 6,
+  "fields": {
+    "name": "Second",
+    "slug": "second",
+    "description": "Inside something level country. Term bed once play fund forget someone.",
+    "color": "#5ca8b2"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 7,
+  "fields": {
+    "name": "Whose",
+    "slug": "whose",
+    "description": "Take court but finally drug night. Idea response political eight nation word.",
+    "color": "#bf52a0"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 8,
+  "fields": {
+    "name": "Product",
+    "slug": "product",
+    "description": "Share out trial reason dream. Imagine father sense project great threat.",
+    "color": "#3f654b"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 9,
+  "fields": {
+    "name": "Marriage",
+    "slug": "marriage",
+    "description": "The thing law pay become tough certainly involve. Doctor increase expert everyone understand top blood. Leave another green product.",
+    "color": "#ac2dba"
+  }
+},
+{
+  "model": "categories.category",
+  "pk": 10,
+  "fields": {
+    "name": "Real",
+    "slug": "real",
+    "description": "Throw student spring card.",
+    "color": "#49d253"
+  }
+}
+]

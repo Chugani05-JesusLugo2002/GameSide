@@ -6,5 +6,4 @@ faker
 django
 pillow
 ipython
-django-browser-reload
 django-colorfield
