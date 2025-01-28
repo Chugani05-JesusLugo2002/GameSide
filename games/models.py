@@ -5,11 +5,11 @@ from django.db import models
 
 class Game(models.Model):
     class Pegi(models.IntegerChoices):
-        PEGI3 = 3, 'PEGI 3'
-        PEGI7 = 7, 'PEGI 7'
-        PEGI12 = 12, 'PEGI 12'
-        PEGI16 = 16, 'PEGI 16'
-        PEGI18 = 18, 'PEGI 18'
+        PEGI3 = 3, 'Pegi3'
+        PEGI7 = 7, 'Pegi7'
+        PEGI12 = 12, 'Pegi12'
+        PEGI16 = 16, 'Pegi16'
+        PEGI18 = 18, 'Pegi18'
 
     title = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(unique=True)
@@ -35,10 +35,10 @@ class Game(models.Model):
 class Review(models.Model):
     comment = models.TextField()
     rating = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)]
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='reviews')
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='reviews')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

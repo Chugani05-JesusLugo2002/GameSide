@@ -12,5 +12,5 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'game', 'rating')
-    list_filter = ('user', 'game', 'rating')
+    list_display = ('author', 'game', 'rating')
+    list_filter = ('author', 'game', 'rating')
