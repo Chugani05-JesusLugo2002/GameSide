@@ -1,7 +1,6 @@
-from shared.serializers import BaseSerializer
-
-from platforms.serializers import PlatformSerializer
 from categories.serializers import CategorySerializer
+from platforms.serializers import PlatformSerializer
+from shared.serializers import BaseSerializer
 from users.serializers import UserSerializer
 
 
@@ -20,8 +19,10 @@ class GameSerializer(BaseSerializer):
             'stock': instance.stock,
             'released_at': instance.released_at,
             'pegi': instance.pegi,
-            'category': CategorySerializer(instance.category),
-            'platforms': PlatformSerializer(instance.platforms.all(), request=request)
+            'category': CategorySerializer(instance.category).serialize(),
+            'platforms': PlatformSerializer(
+                instance.platforms.all(), request=self.request
+            ).serialize(),
         }
 
 
@@ -34,8 +35,8 @@ class ReviewSerializer(BaseSerializer):
             'id': instance.pk,
             'comment': instance.comment,
             'rating': instance.rating,
-            'game': GameSerializer(instance.game, request=request),
-            'author': UserSerializer(instance.user),
+            'game': GameSerializer(instance.game, request=self.request).serialize(),
+            'author': UserSerializer(instance.author).serialize(),
             'created_at': instance.created_at,
-            'updated_at': instance.updated_at
+            'updated_at': instance.updated_at,
         }
