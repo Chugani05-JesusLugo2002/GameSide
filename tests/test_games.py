@@ -161,7 +161,7 @@ def test_add_review_fails_when_token_is_invalid(client):
     data = {'token': str(uuid.uuid4()), 'rating': 1, 'comment': 'This is a test comment'}
     status, response = post_json(client, '/api/games/test/reviews/add/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db

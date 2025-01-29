@@ -41,7 +41,7 @@ def test_add_order_fails_when_invalid_token(client):
     data = {'token': str(uuid.uuid4())}
     status, response = post_json(client, '/api/orders/add/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
@@ -91,7 +91,7 @@ def test_order_detail_fails_when_invalid_token(client):
     data = {'token': str(uuid.uuid4())}
     status, response = post_json(client, '/api/orders/1/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
@@ -151,7 +151,7 @@ def test_order_game_list_when_invalid_token(client):
     data = {'token': str(uuid.uuid4())}
     status, response = post_json(client, '/api/orders/1/games/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
@@ -223,7 +223,7 @@ def add_game_to_order_fails_when_invalid_token(client):
     data = {'token': str(uuid.uuid4())}
     status, response = post_json(client, '/api/orders/1/games/add/game/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
@@ -307,7 +307,7 @@ def test_confirm_order_fails_when_invalid_token(client):
     data = {'token': str(uuid.uuid4())}
     status, response = post_json(client, '/api/orders/1/confirm/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
@@ -385,7 +385,7 @@ def test_cancel_order_fails_when_invalid_token(client):
     data = {'token': str(uuid.uuid4())}
     status, response = post_json(client, '/api/orders/1/cancel/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
@@ -535,7 +535,7 @@ def test_pay_order_fails_when_invalid_token(client):
     }
     status, response = post_json(client, '/api/orders/1/pay/', data)
     assert status == 401
-    assert response == {'error': 'Invalid token'}
+    assert response == {'error': 'Unknown authentication token'}
 
 
 @pytest.mark.django_db
