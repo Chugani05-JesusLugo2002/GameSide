@@ -11,5 +11,5 @@ class CategorySerializer(BaseSerializer):
             'name': instance.name,
             'slug': instance.slug,
             'description': instance.description,
-            'color': instance.color
+            'color': instance.color,
         }

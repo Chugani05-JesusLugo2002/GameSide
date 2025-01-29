@@ -88,10 +88,11 @@ def test_game_detail_fails_when_game_does_not_exist(client):
 @pytest.mark.django_db
 def test_review_list(client, game):
     baker.make(Review, game=game, _fill_optional=True, _quantity=10)
+    reviews = Review.objects.filter(game=game)
     status, response = get_json(client, f'/api/games/{game.slug}/reviews/')
     assert status == 200
     for review in response:
-        compare_reviews(review, game.reviews.get(pk=review['id']))
+        compare_reviews(review, reviews.get(pk=review['id']))
 
 
 @pytest.mark.django_db
