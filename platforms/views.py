@@ -1,7 +1,4 @@
-from django.http import HttpResponse
-
 from .models import Platform
-
 from .serializers import PlatformSerializer
 
 
