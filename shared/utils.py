@@ -29,10 +29,11 @@ def assert_required_fields(*fields):
     def decorator(func):
         def wrapper(*args, **kwargs):
             request = args[0]
-            if len(fields) != len(request.data.keys()):
+            keys = request.data.keys()
+            if len(fields) != len(keys):
                 return JsonResponse({'error': 'Missing required fields'}, status=400) 
-            for field, key in zip(fields, request.data.keys()):
-                if field != key:
+            for field in fields:
+                if field not in keys:
                     return JsonResponse({'error': 'Missing required fields'}, status=400)
             return func(*args, **kwargs)
         return wrapper

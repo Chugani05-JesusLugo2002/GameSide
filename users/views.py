@@ -1,7 +1,6 @@
-import json
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
 
 from shared.utils import assert_method, assert_json_body, assert_required_fields
 
@@ -11,4 +10,8 @@ from shared.utils import assert_method, assert_json_body, assert_required_fields
 @assert_json_body
 @assert_required_fields('username', 'password')
 def auth(request):
-    return JsonResponse(request.data)
+    username = request.data['username']
+    password = request.data['password']
+    if user := authenticate(request, username=username, password=password):
+        return JsonResponse({'token': user.token.key})
+    return JsonResponse({'error': 'Invalid credentials'}, status=401)
