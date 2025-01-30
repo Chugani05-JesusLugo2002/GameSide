@@ -11,7 +11,6 @@ def assert_game_found(func):
         except Game.DoesNotExist:
             return JsonResponse({'error': 'Game not found'}, status=404)
         return func(*args, **kwargs)
-
     return wrapper
 
 
@@ -23,5 +22,4 @@ def assert_review_found(func):
         except Review.DoesNotExist:
             return JsonResponse({'error': 'Review not found'}, status=404)
         return func(*args, **kwargs)
-
     return wrapper

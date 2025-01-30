@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import Platform
 
 
-def assert_object_found(func):
+def assert_platform_found(func):
     def wrapper(*args, **kwargs):
         platform_slug = kwargs['platform_slug']
         try:
