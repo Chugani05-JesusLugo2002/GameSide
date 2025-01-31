@@ -16,7 +16,3 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='orders')
     games = models.ManyToManyField('games.Game', related_name='orders', blank=True)
-
-    @property
-    def price():
-        return 'hola, soy el price'

@@ -2,6 +2,8 @@ import json
 
 from django.http import JsonResponse
 
+from users.models import Token
+
 
 def assert_method(method: str):
     def decorator(func):
@@ -38,3 +40,14 @@ def assert_required_fields(*fields):
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+def assert_token(func):
+    def wrapper(*args, **kwargs):
+        request = args[0]
+        token = request.data['token']
+        try:
+            request.token = Token.objects.get(key=token)
+        except Token.DoesNotExist:
+            return JsonResponse({'error': 'Unknown authentication token'}, status=401)
+        return func(*args, **kwargs)
+    return wrapper

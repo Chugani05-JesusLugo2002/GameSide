@@ -5,11 +5,11 @@ from django.db import models
 
 class Game(models.Model):
     class Pegi(models.IntegerChoices):
-        PEGI3 = 3, 'Pegi3'
-        PEGI7 = 7, 'Pegi7'
-        PEGI12 = 12, 'Pegi12'
-        PEGI16 = 16, 'Pegi16'
-        PEGI18 = 18, 'Pegi18'
+        PEGI3 = 3
+        PEGI7 = 7
+        PEGI12 = 12
+        PEGI16 = 16
+        PEGI18 = 18
 
     title = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(unique=True)

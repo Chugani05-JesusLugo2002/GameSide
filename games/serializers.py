@@ -18,7 +18,7 @@ class GameSerializer(BaseSerializer):
             'price': float(instance.price),
             'stock': instance.stock,
             'released_at': instance.released_at,
-            'pegi': instance.pegi,
+            'pegi': instance.get_pegi_display(),
             'category': CategorySerializer(instance.category).serialize(),
             'platforms': PlatformSerializer(
                 instance.platforms.all(), request=self.request

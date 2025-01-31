@@ -125,6 +125,7 @@ def test_add_review(client, token, game):
     game.save()
     data = {'token': token.key, 'rating': 5, 'comment': 'This is a test comment'}
     status, response = post_json(client, f'/api/games/{game.slug}/reviews/add/', data)
+    print(response)
     assert status == 200
     assert response == {'id': 1}
     review = Review.objects.get(pk=response['id'])
@@ -160,6 +161,7 @@ def test_add_review_fails_when_rating_is_out_of_range(client, token, game):
 def test_add_review_fails_when_token_is_invalid(client):
     data = {'token': str(uuid.uuid4()), 'rating': 1, 'comment': 'This is a test comment'}
     status, response = post_json(client, '/api/games/test/reviews/add/', data)
+    print(status, response)
     assert status == 401
     assert response == {'error': 'Unknown authentication token'}
 
