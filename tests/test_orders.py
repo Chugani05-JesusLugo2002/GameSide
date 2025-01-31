@@ -458,7 +458,7 @@ def test_pay_order_fails_when_order_is_not_confirmed(client, token, order):
     }
     status, response = post_json(client, f'/api/orders/{order.pk}/pay/', data)
     assert status == 400
-    assert response == {'error': 'Orders can only be payed when confirmed'}
+    assert response == {'error': 'Orders can only be paid when confirmed'}
 
 
 @pytest.mark.django_db

@@ -1,8 +1,8 @@
+from games.serializers import GameSerializer
 from shared.serializers import BaseSerializer
 
-from games.serializers import GameSerializer
-
 from .models import Order
+
 
 class OrderSerializer(BaseSerializer):
     def __init__(self, to_serialize, *, fields=[], request=None):
@@ -11,10 +11,10 @@ class OrderSerializer(BaseSerializer):
     def serialize_instance(self, instance) -> dict:
         return {
             'id': instance.pk,
-            'status': instance.status,
+            'status': instance.get_status_display(),
             'key': instance.key if instance.status == Order.Status.PAID else None,
-            'games': GameSerializer(instance.games.all(), request=self.request),
-            'created_at': instance.created_at,
-            'update_at': instance.updated_at,
-            # 'price': instance.price
+            'games': GameSerializer(instance.games.all(), request=self.request).serialize(),
+            'created_at': instance.created_at.isoformat(),
+            'updated_at': instance.updated_at.isoformat(),
+            'price': instance.price,
         }

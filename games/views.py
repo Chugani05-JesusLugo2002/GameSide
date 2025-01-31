@@ -1,7 +1,7 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from shared.utils import assert_method, assert_json_body, assert_required_fields, assert_token
+from shared.utils import assert_json_body, assert_method, assert_required_fields, assert_token
 
 from .models import Game, Review
 from .serializers import GameSerializer, ReviewSerializer
@@ -55,10 +55,6 @@ def add_review(request, game_slug):
     if not 1 < rating <= 5:
         return JsonResponse({'error': 'Rating is out of range'}, status=400)
     review = Review.objects.create(
-        comment=comment,
-        rating=rating,
-        game=game,
-        author=request.token.user
+        comment=comment, rating=rating, game=game, author=request.token.user
     )
     return JsonResponse({'id': review.pk})
-
