@@ -35,3 +35,7 @@ class Order(models.Model):
             game.stock += 1
             game.save()
         self.save()
+
+    def pay(self):
+        self.status = Order.Status.PAID
+        self.save()

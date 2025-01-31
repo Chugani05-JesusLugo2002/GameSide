@@ -9,7 +9,7 @@ from users.models import Token
 
 from .models import Order
 from .serializers import OrderSerializer
-from .utils import assert_order_found, assert_owner
+from .utils import assert_order_found, assert_owner, Card
 
 
 @csrf_exempt
@@ -99,5 +99,23 @@ def cancel_order(request, order_pk):
 
 @csrf_exempt
 @assert_method('POST')
+@assert_json_body
+@assert_required_fields('token', 'card-number', 'exp-date', 'cvc')
+@assert_token
+@assert_order_found
+@assert_owner
 def pay_order(request, order_pk):
-    pass
+    card_number = request.data['card-number']
+    exp_date = request.data['exp-date']
+    cvc = request.data['cvc']
+
+    card = Card(card_number, exp_date, cvc)
+    if (error := card.validate()):
+        return JsonResponse(error, status=400)
+    
+    order = Order.objects.get(pk=order_pk)
+    if order.status != Order.Status.CONFIRMED:
+        return JsonResponse({'error': 'Orders can only be paid when confirmed'}, status=400)
+    order.pay()
+
+    return JsonResponse({'status': order.get_status_display(), 'key': order.key})
