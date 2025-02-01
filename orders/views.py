@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from games.models import Game
 from games.serializers import GameSerializer
-from shared.decorators import assert_json_body, assert_method, assert_required_fields, assert_token, assert_object_found
+from shared.decorators import assert_method, assert_token, assert_object_found, get_valid_json_fields
 from users.models import Token
 
 from .models import Order
@@ -14,8 +14,7 @@ from .decorators import assert_owner
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token')
+@get_valid_json_fields('token')
 @assert_token
 def add_order(request):
     token = Token.objects.get(key=request.token.key)
@@ -25,8 +24,7 @@ def add_order(request):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token')
+@get_valid_json_fields('token')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -38,8 +36,7 @@ def order_detail(request, order_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token')
+@get_valid_json_fields('token')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -53,8 +50,7 @@ def order_game_list(request, order_pk):
 @assert_method('POST')
 @assert_object_found(Order)
 @assert_object_found(Game, with_slug=True)
-@assert_json_body
-@assert_required_fields('token')
+@get_valid_json_fields('token')
 @assert_token
 @assert_owner
 def add_game_to_order(request, order_pk, game_slug):
@@ -69,8 +65,7 @@ def add_game_to_order(request, order_pk, game_slug):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token')
+@get_valid_json_fields('token')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -84,8 +79,7 @@ def confirm_order(request, order_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token')
+@get_valid_json_fields('token')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -99,8 +93,7 @@ def cancel_order(request, order_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token', 'card-number', 'exp-date', 'cvc')
+@get_valid_json_fields('token', 'card-number', 'exp-date', 'cvc')
 @assert_token
 @assert_object_found(Order)
 @assert_owner

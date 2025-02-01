@@ -11,9 +11,7 @@ def assert_method(method: str):
             if request.method != method:
                 return JsonResponse({'error': 'Method not allowed'}, status=405)
             return func(*args, **kwargs)
-
         return wrapper
-
     return decorator
 
 
@@ -35,32 +33,20 @@ def assert_object_found(model, *, with_slug = False):
     return decorator
 
 
-def assert_json_body(func):
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        try:
-            request.data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON body'}, status=400)
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-def assert_required_fields(*fields):
+def get_valid_json_fields(*fields: str):
     def decorator(func):
         def wrapper(*args, **kwargs):
             request = args[0]
-            keys = request.data.keys()
-            if len(fields) != len(keys):
-                return JsonResponse({'error': 'Missing required fields'}, status=400)
+            try:
+                request.data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+            body_fields = request.data.keys()
             for field in fields:
-                if field not in keys:
+                if field not in body_fields:
                     return JsonResponse({'error': 'Missing required fields'}, status=400)
             return func(*args, **kwargs)
-
         return wrapper
-
     return decorator
 
 
@@ -73,5 +59,4 @@ def assert_token(func):
         except Token.DoesNotExist:
             return JsonResponse({'error': 'Unknown authentication token'}, status=401)
         return func(*args, **kwargs)
-
     return wrapper

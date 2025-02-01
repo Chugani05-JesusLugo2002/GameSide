@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from shared.decorators import assert_json_body, assert_method, assert_required_fields, assert_token, assert_object_found
+from shared.decorators import assert_method, assert_token, assert_object_found, get_valid_json_fields
 
 from .models import Game, Review
 from .serializers import GameSerializer, ReviewSerializer
@@ -47,8 +47,7 @@ def review_detail(request, review_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('token', 'rating', 'comment')
+@get_valid_json_fields('token', 'rating', 'comment')
 @assert_token
 @assert_object_found(Game, with_slug=True)
 def add_review(request, game_slug):

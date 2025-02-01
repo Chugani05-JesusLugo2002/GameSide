@@ -2,13 +2,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 
-from shared.decorators import assert_method, assert_json_body, assert_required_fields
+from shared.decorators import assert_method, get_valid_json_fields
 
 
 @csrf_exempt
 @assert_method('POST')
-@assert_json_body
-@assert_required_fields('username', 'password')
+@get_valid_json_fields('username', 'password')
 def auth(request):
     username = request.data['username']
     password = request.data['password']
