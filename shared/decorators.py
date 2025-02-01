@@ -1,5 +1,4 @@
 import json
-
 from django.http import JsonResponse
 
 from users.models import Token
@@ -15,6 +14,24 @@ def assert_method(method: str):
 
         return wrapper
 
+    return decorator
+
+
+def assert_object_found(model, *, with_slug = False):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            model_name = model.__name__
+            suffix = '_slug' if with_slug else '_pk'
+            instance_id = model_name.lower() + suffix
+            try:
+                if with_slug:
+                    model.objects.get(slug=kwargs[instance_id])
+                else:
+                    model.objects.get(pk=kwargs[instance_id])
+            except model.DoesNotExist:
+                return JsonResponse({'error': f'{model_name} not found'}, status=404)
+            return func(*args, **kwargs)
+        return wrapper
     return decorator
 
 

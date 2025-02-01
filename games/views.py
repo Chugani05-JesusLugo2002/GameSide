@@ -1,23 +1,27 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from shared.utils import assert_json_body, assert_method, assert_required_fields, assert_token
+from shared.decorators import assert_json_body, assert_method, assert_required_fields, assert_token, assert_object_found
 
 from .models import Game, Review
 from .serializers import GameSerializer, ReviewSerializer
-from .utils import assert_game_found, assert_review_found
 
 
 @assert_method('GET')
 def game_list(request):
-    # TODO: Filter with querystring
+    category_query = request.GET.get('category', '')
+    platform_query = request.GET.get('platform', '')
     games = Game.objects.all()
+    if category_query:
+        games = games.filter(category__slug=category_query)
+    if platform_query:
+        games = games.filter(platforms__slug=platform_query)
     serializer = GameSerializer(games, request=request)
     return serializer.json_response()
 
 
 @assert_method('GET')
-@assert_game_found
+@assert_object_found(Game, with_slug=True)
 def game_detail(request, game_slug):
     game = Game.objects.get(slug=game_slug)
     serializer = GameSerializer(game, request=request)
@@ -25,7 +29,7 @@ def game_detail(request, game_slug):
 
 
 @assert_method('GET')
-@assert_game_found
+@assert_object_found(Game, with_slug=True)
 def review_list(request, game_slug):
     game = Game.objects.get(slug=game_slug)
     reviews = game.reviews.all()
@@ -34,7 +38,7 @@ def review_list(request, game_slug):
 
 
 @assert_method('GET')
-@assert_review_found
+@assert_object_found(Review)
 def review_detail(request, review_pk):
     review = Review.objects.get(pk=review_pk)
     serializer = ReviewSerializer(review, request=request)
@@ -46,7 +50,7 @@ def review_detail(request, review_pk):
 @assert_json_body
 @assert_required_fields('token', 'rating', 'comment')
 @assert_token
-@assert_game_found
+@assert_object_found(Game, with_slug=True)
 def add_review(request, game_slug):
     rating = request.data['rating']
     comment = request.data['comment']

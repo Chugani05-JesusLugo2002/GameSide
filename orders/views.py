@@ -3,13 +3,13 @@ from django.views.decorators.csrf import csrf_exempt
 
 from games.models import Game
 from games.serializers import GameSerializer
-from games.utils import assert_game_found
-from shared.utils import assert_json_body, assert_method, assert_required_fields, assert_token
+from shared.decorators import assert_json_body, assert_method, assert_required_fields, assert_token, assert_object_found
 from users.models import Token
 
 from .models import Order
 from .serializers import OrderSerializer
-from .utils import assert_order_found, assert_owner, Card
+from .utils import Card
+from .decorators import assert_owner
 
 
 @csrf_exempt
@@ -28,7 +28,7 @@ def add_order(request):
 @assert_json_body
 @assert_required_fields('token')
 @assert_token
-@assert_order_found
+@assert_object_found(Order)
 @assert_owner
 def order_detail(request, order_pk):
     order = Order.objects.get(pk=order_pk)
@@ -41,7 +41,7 @@ def order_detail(request, order_pk):
 @assert_json_body
 @assert_required_fields('token')
 @assert_token
-@assert_order_found
+@assert_object_found(Order)
 @assert_owner
 def order_game_list(request, order_pk):
     games = Order.objects.get(pk=order_pk).games.all()
@@ -51,8 +51,8 @@ def order_game_list(request, order_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@assert_order_found
-@assert_game_found
+@assert_object_found(Order)
+@assert_object_found(Game, with_slug=True)
 @assert_json_body
 @assert_required_fields('token')
 @assert_token
@@ -72,7 +72,7 @@ def add_game_to_order(request, order_pk, game_slug):
 @assert_json_body
 @assert_required_fields('token')
 @assert_token
-@assert_order_found
+@assert_object_found(Order)
 @assert_owner
 def confirm_order(request, order_pk):
     order = Order.objects.get(pk=order_pk)
@@ -87,7 +87,7 @@ def confirm_order(request, order_pk):
 @assert_json_body
 @assert_required_fields('token')
 @assert_token
-@assert_order_found
+@assert_object_found(Order)
 @assert_owner
 def cancel_order(request, order_pk):
     order = Order.objects.get(pk=order_pk)
@@ -102,7 +102,7 @@ def cancel_order(request, order_pk):
 @assert_json_body
 @assert_required_fields('token', 'card-number', 'exp-date', 'cvc')
 @assert_token
-@assert_order_found
+@assert_object_found(Order)
 @assert_owner
 def pay_order(request, order_pk):
     card_number = request.data['card-number']

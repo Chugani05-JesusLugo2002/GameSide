@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 
-from shared.utils import assert_method, assert_json_body, assert_required_fields
+from shared.decorators import assert_method, assert_json_body, assert_required_fields
 
 
 @csrf_exempt
