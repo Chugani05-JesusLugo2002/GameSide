@@ -58,8 +58,7 @@ def add_game_to_order(request, order_pk, game_slug):
     if game.stock == 0:
         return JsonResponse({'error': 'Game out of stock'}, status=400)
     order = Order.objects.get(pk=order_pk)
-    order.games.add(game)
-    game.stock -= 1
+    order.add_game(game)
     return JsonResponse({'num-games-in-order': order.games.count()})
 
 
@@ -73,8 +72,8 @@ def confirm_order(request, order_pk):
     order = Order.objects.get(pk=order_pk)
     if order.status != Order.Status.INITIATED:
         return JsonResponse({'error': 'Orders can only be confirmed when initiated'}, status=400)
-    order.confirm()
-    return JsonResponse({'status': order.get_status_display()})
+    resolution = order.confirm()
+    return JsonResponse(resolution)
 
 
 @csrf_exempt
@@ -87,8 +86,8 @@ def cancel_order(request, order_pk):
     order = Order.objects.get(pk=order_pk)
     if order.status != Order.Status.INITIATED:
         return JsonResponse({'error': 'Orders can only be cancelled when initiated'}, status=400)
-    order.cancel()
-    return JsonResponse({'status': order.get_status_display()})
+    resolution = order.cancel()
+    return JsonResponse(resolution)
 
 
 @csrf_exempt
@@ -109,6 +108,5 @@ def pay_order(request, order_pk):
     order = Order.objects.get(pk=order_pk)
     if order.status != Order.Status.CONFIRMED:
         return JsonResponse({'error': 'Orders can only be paid when confirmed'}, status=400)
-    order.pay()
-
-    return JsonResponse({'status': order.get_status_display(), 'key': order.key})
+    resolution = order.pay()
+    return JsonResponse(resolution)

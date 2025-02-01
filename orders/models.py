@@ -23,10 +23,15 @@ class Order(models.Model):
     @property
     def price(self):
         return sum((float(game.price) for game in self.games.all()))
+    
+    def add_game(self, game):
+        self.games.add(game)
+        game.stock -= 1
 
     def confirm(self):
         self.status = Order.Status.CONFIRMED
         self.save()
+        return {'status': self.get_status_display()}
 
     def cancel(self):
         self.status = Order.Status.CANCELLED
@@ -35,7 +40,9 @@ class Order(models.Model):
             game.stock += 1
             game.save()
         self.save()
+        return {'status': self.get_status_display()}
 
-    def pay(self):
+    def pay(self) -> dict:
         self.status = Order.Status.PAID
         self.save()
+        return {'status': self.get_status_display(), 'key': self.key}
