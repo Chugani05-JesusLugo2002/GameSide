@@ -1,7 +1,12 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from shared.decorators import assert_method, assert_token, assert_object_found, get_valid_json_fields
+from shared.decorators import (
+    assert_method,
+    assert_object_found,
+    assert_token,
+    get_valid_json_fields,
+)
 
 from .models import Game, Review
 from .serializers import GameSerializer, ReviewSerializer
@@ -9,8 +14,8 @@ from .serializers import GameSerializer, ReviewSerializer
 
 @assert_method('GET')
 def game_list(request):
-    category_query = request.GET.get('category', '')
-    platform_query = request.GET.get('platform', '')
+    category_query = request.GET.get('category')
+    platform_query = request.GET.get('platform')
     games = Game.objects.all()
     if category_query:
         games = games.filter(category__slug=category_query)
@@ -47,7 +52,7 @@ def review_detail(request, review_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@get_valid_json_fields('token', 'rating', 'comment')
+@get_valid_json_fields('rating', 'comment')
 @assert_token
 @assert_object_found(Game, with_slug=True)
 def add_review(request, game_slug):

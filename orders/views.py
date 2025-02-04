@@ -3,18 +3,22 @@ from django.views.decorators.csrf import csrf_exempt
 
 from games.models import Game
 from games.serializers import GameSerializer
-from shared.decorators import assert_method, assert_token, assert_object_found, get_valid_json_fields
+from shared.decorators import (
+    assert_method,
+    assert_object_found,
+    assert_token,
+    get_valid_json_fields,
+)
 from users.models import Token
 
+from .decorators import assert_owner
 from .models import Order
 from .serializers import OrderSerializer
 from .utils import Card
-from .decorators import assert_owner
 
 
 @csrf_exempt
-@assert_method('POST')
-@get_valid_json_fields('token')
+@assert_method('GET')
 @assert_token
 def add_order(request):
     token = Token.objects.get(key=request.token.key)
@@ -23,8 +27,7 @@ def add_order(request):
 
 
 @csrf_exempt
-@assert_method('POST')
-@get_valid_json_fields('token')
+@assert_method('GET')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -35,8 +38,7 @@ def order_detail(request, order_pk):
 
 
 @csrf_exempt
-@assert_method('POST')
-@get_valid_json_fields('token')
+@assert_method('GET')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -47,10 +49,9 @@ def order_game_list(request, order_pk):
 
 
 @csrf_exempt
-@assert_method('POST')
+@assert_method('GET')
 @assert_object_found(Order)
 @assert_object_found(Game, with_slug=True)
-@get_valid_json_fields('token')
 @assert_token
 @assert_owner
 def add_game_to_order(request, order_pk, game_slug):
@@ -63,8 +64,7 @@ def add_game_to_order(request, order_pk, game_slug):
 
 
 @csrf_exempt
-@assert_method('POST')
-@get_valid_json_fields('token')
+@assert_method('GET')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -77,8 +77,7 @@ def confirm_order(request, order_pk):
 
 
 @csrf_exempt
-@assert_method('POST')
-@get_valid_json_fields('token')
+@assert_method('GET')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -92,7 +91,7 @@ def cancel_order(request, order_pk):
 
 @csrf_exempt
 @assert_method('POST')
-@get_valid_json_fields('token', 'card-number', 'exp-date', 'cvc')
+@get_valid_json_fields('card-number', 'exp-date', 'cvc')
 @assert_token
 @assert_object_found(Order)
 @assert_owner
@@ -102,9 +101,9 @@ def pay_order(request, order_pk):
     cvc = request.data['cvc']
 
     card = Card(card_number, exp_date, cvc)
-    if (error := card.validate()):
+    if error := card.validate():
         return JsonResponse(error, status=400)
-    
+
     order = Order.objects.get(pk=order_pk)
     if order.status != Order.Status.CONFIRMED:
         return JsonResponse({'error': 'Orders can only be paid when confirmed'}, status=400)

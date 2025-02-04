@@ -1,4 +1,6 @@
 import json
+import re
+
 from django.http import JsonResponse
 
 from users.models import Token
@@ -11,11 +13,13 @@ def assert_method(method: str):
             if request.method != method:
                 return JsonResponse({'error': 'Method not allowed'}, status=405)
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
-def assert_object_found(model, *, with_slug = False):
+def assert_object_found(model, *, with_slug=False):
     def decorator(func):
         def wrapper(*args, **kwargs):
             model_name = model.__name__
@@ -29,7 +33,9 @@ def assert_object_found(model, *, with_slug = False):
             except model.DoesNotExist:
                 return JsonResponse({'error': f'{model_name} not found'}, status=404)
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
@@ -46,17 +52,27 @@ def get_valid_json_fields(*fields: str):
                 if field not in body_fields:
                     return JsonResponse({'error': 'Missing required fields'}, status=400)
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
 def assert_token(func):
     def wrapper(*args, **kwargs):
+        PATTERN = r'^Bearer ([a-fA-F\d]{8}(?:\-[a-fA-F\d]{4}){3}\-[a-fA-F\d]{12})$'
         request = args[0]
-        token = request.data['token']
-        try:
-            request.token = Token.objects.get(key=token)
-        except Token.DoesNotExist:
-            return JsonResponse({'error': 'Unknown authentication token'}, status=401)
+        auth_header = request.headers.get('Authorization')
+        if token := re.match(PATTERN, auth_header):
+            try:
+                request.token = Token.objects.get(key=token[1])
+            except Token.DoesNotExist:
+                return JsonResponse({'error': 'Unregistered authentication token'}, status=401)
+        else:
+            return JsonResponse({'error': 'Invalid authentication token'}, status=400)
         return func(*args, **kwargs)
+
     return wrapper
+
+
+{'Authorization': 'Bearer 1234'}

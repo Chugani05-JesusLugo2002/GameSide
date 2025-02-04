@@ -76,11 +76,13 @@ def compare_reviews(rreview, ereview) -> None:
     assert datetime_isoformats_are_close(rreview['updated_at'], ereview.updated_at.isoformat())
 
 
-def get_json(client, url: str) -> tuple:
-    response = client.get(url)
+def get_json(client, url: str, bearer_token: str = '') -> tuple:
+    headers = {'Authorization': f'Bearer {bearer_token}'} if bearer_token else {}
+    response = client.get(url, headers=headers)
     return response.status_code, response.json()
 
 
-def post_json(client, url: str, data: dict = {}) -> tuple:
-    response = client.post(url, data, content_type='application/json')
+def post_json(client, url: str, data: dict = {}, bearer_token: str = '') -> tuple:
+    headers = {'Authorization': f'Bearer {bearer_token}'} if bearer_token else {}
+    response = client.post(url, data, content_type='application/json', headers=headers)
     return response.status_code, response.json()
