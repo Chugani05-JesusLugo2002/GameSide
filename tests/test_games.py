@@ -107,6 +107,13 @@ def test_review_list_fails_when_method_is_not_allowed(client):
 
 
 @pytest.mark.django_db
+def test_review_list_fails_when_game_does_not_exist(client):
+    status, response = get_json(client, '/api/games/test/reviews/')
+    assert status == 404
+    assert response == {'error': 'Game not found'}
+
+
+@pytest.mark.django_db
 def test_review_detail(client, game, review):
     review.game = game
     review.save()
@@ -120,6 +127,13 @@ def test_review_detail_fails_when_method_is_not_allowed(client):
     status, response = post_json(client, '/api/games/reviews/1/')
     assert status == 405
     assert response == {'error': 'Method not allowed'}
+
+
+@pytest.mark.django_db
+def test_review_detail_fails_when_review_does_not_exist(client):
+    status, response = get_json(client, '/api/games/reviews/1/')
+    assert status == 404
+    assert response == {'error': 'Review not found'}
 
 
 @pytest.mark.django_db
@@ -169,7 +183,7 @@ def test_add_review_fails_when_rating_is_out_of_range(client, token, game):
 
 
 @pytest.mark.django_db
-def test_add_review_fails_when_token_is_unregistered(client):
+def test_add_review_fails_when_unregistered_token(client):
     data = {'rating': 1, 'comment': 'This is a test comment'}
     status, response = post_json(client, '/api/games/test/reviews/add/', data, str(uuid.uuid4()))
     assert status == 401

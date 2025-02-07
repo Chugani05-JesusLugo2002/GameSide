@@ -18,7 +18,7 @@ from .utils import Card
 
 
 @csrf_exempt
-@assert_method('GET')
+@assert_method('POST')
 @assert_token
 def add_order(request):
     token = Token.objects.get(key=request.token.key)
@@ -49,13 +49,14 @@ def order_game_list(request, order_pk):
 
 
 @csrf_exempt
-@assert_method('GET')
+@assert_method('POST')
+@get_valid_json_fields('game-slug')
 @assert_object_found(Order)
-@assert_object_found(Game, with_slug=True)
+@assert_object_found(Game, with_slug=True, json_inserted=True)
 @assert_token
 @assert_owner
-def add_game_to_order(request, order_pk, game_slug):
-    game = Game.objects.get(slug=game_slug)
+def add_game_to_order(request, order_pk):
+    game = Game.objects.get(slug=request.data['game_slug'])
     if game.stock == 0:
         return JsonResponse({'error': 'Game out of stock'}, status=400)
     order = Order.objects.get(pk=order_pk)

@@ -19,17 +19,24 @@ def assert_method(method: str):
     return decorator
 
 
-def assert_object_found(model, *, with_slug=False):
+def assert_object_found(model, *, with_slug=False, json_inserted=False):
     def decorator(func):
         def wrapper(*args, **kwargs):
             model_name = model.__name__
             suffix = '_slug' if with_slug else '_pk'
             instance_id = model_name.lower() + suffix
+            request = args[0]
             try:
-                if with_slug:
-                    model.objects.get(slug=kwargs[instance_id])
+                if json_inserted:
+                    if with_slug:
+                        model.objects.get(slug=request.data[instance_id])
+                    else:
+                        model.objects.get(pk=request.data[instance_id])
                 else:
-                    model.objects.get(pk=kwargs[instance_id])
+                    if with_slug:
+                        model.objects.get(slug=kwargs[instance_id])
+                    else:
+                        model.objects.get(pk=kwargs[instance_id])
             except model.DoesNotExist:
                 return JsonResponse({'error': f'{model_name} not found'}, status=404)
             return func(*args, **kwargs)

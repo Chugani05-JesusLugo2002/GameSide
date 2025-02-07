@@ -87,6 +87,11 @@ def test_token_model_has_proper_fields():
 
 
 @pytest.mark.django_db
+def test_order_class_has_price_property():
+    assert getattr(Order, 'price')
+
+
+@pytest.mark.django_db
 def test_review_model_has_proper_validators():
     validators = Review.rating.field.validators
     assert len(validators) == 2, (
@@ -114,7 +119,7 @@ def test_game_category_is_null_when_category_is_deleted(category, game):
 
 
 @pytest.mark.django_db
-def test_model_enum_choices():
+def test_enum_fields_have_proper_choices():
     choices = Game.pegi.field.choices
     assert choices == [
         (3, 'Pegi3'),
