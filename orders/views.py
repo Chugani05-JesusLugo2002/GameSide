@@ -56,12 +56,31 @@ def order_game_list(request, order_pk):
 @assert_token
 @assert_owner
 def add_game_to_order(request, order_pk):
-    game = Game.objects.get(slug=request.data['game_slug'])
+    game = Game.objects.get(slug=request.data['game-slug'])
     if game.stock == 0:
         return JsonResponse({'error': 'Game out of stock'}, status=400)
     order = Order.objects.get(pk=order_pk)
     order.add_game(game)
     return JsonResponse({'num-games-in-order': order.games.count()})
+
+
+@csrf_exempt
+@assert_method('POST')
+@get_valid_json_fields('status')
+@assert_token
+@assert_object_found(Order)
+@assert_owner
+def change_order_status(request, order_pk):
+    order = Order.objects.get(pk=order_pk)
+    status = request.data['status']
+    valid_status_values = (Order.Status.CANCELLED, Order.Status.CONFIRMED)
+    if status not in valid_status_values:
+        return JsonResponse({'error': 'Invalid status'}, status=400)
+    if order.status != Order.Status.INITIATED:
+        return JsonResponse({'error': 'Orders can only be confirmed/cancelled when initiated'}, status=400)
+    resolution = order.change_status(status)
+    return JsonResponse(resolution)
+    
 
 
 @csrf_exempt

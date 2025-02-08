@@ -23,9 +23,13 @@ def assert_object_found(model, *, with_slug=False, json_inserted=False):
     def decorator(func):
         def wrapper(*args, **kwargs):
             model_name = model.__name__
-            suffix = '_slug' if with_slug else '_pk'
+            if json_inserted:
+                suffix = '-slug' if with_slug else '-pk'
+            else:
+                suffix = '_slug' if with_slug else '_pk'
             instance_id = model_name.lower() + suffix
             request = args[0]
+            
             try:
                 if json_inserted:
                     if with_slug:

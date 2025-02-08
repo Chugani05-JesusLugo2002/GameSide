@@ -13,6 +13,10 @@ class Order(models.Model):
         PAID = 3
         CANCELLED = -1
 
+        @property
+        def valid_choices(self):
+            return 
+
     status = models.IntegerField(choices=Status, default=Status.INITIATED)
     key = models.UUIDField(null=True, blank=True, default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -27,6 +31,14 @@ class Order(models.Model):
     def add_game(self, game):
         self.games.add(game)
         game.stock -= 1
+
+    def change_status(self, status_value):
+        match status_value:
+            case Order.Status.CONFIRMED:
+                resolution = self.confirm()
+            case Order.Status.CANCELLED:
+                resolution = self.cancel()
+        return resolution
 
     def confirm(self):
         self.status = Order.Status.CONFIRMED
