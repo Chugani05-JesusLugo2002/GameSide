@@ -80,33 +80,6 @@ def change_order_status(request, order_pk):
         return JsonResponse({'error': 'Orders can only be confirmed/cancelled when initiated'}, status=400)
     resolution = order.change_status(status)
     return JsonResponse(resolution)
-    
-
-
-@csrf_exempt
-@assert_method('GET')
-@assert_token
-@assert_object_found(Order)
-@assert_owner
-def confirm_order(request, order_pk):
-    order = Order.objects.get(pk=order_pk)
-    if order.status != Order.Status.INITIATED:
-        return JsonResponse({'error': 'Orders can only be confirmed when initiated'}, status=400)
-    resolution = order.confirm()
-    return JsonResponse(resolution)
-
-
-@csrf_exempt
-@assert_method('GET')
-@assert_token
-@assert_object_found(Order)
-@assert_owner
-def cancel_order(request, order_pk):
-    order = Order.objects.get(pk=order_pk)
-    if order.status != Order.Status.INITIATED:
-        return JsonResponse({'error': 'Orders can only be cancelled when initiated'}, status=400)
-    resolution = order.cancel()
-    return JsonResponse(resolution)
 
 
 @csrf_exempt
