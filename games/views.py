@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
 
 from shared.decorators import (
@@ -13,13 +13,11 @@ from .serializers import GameSerializer, ReviewSerializer
 
 
 @assert_method('GET')
-def game_list(request):
-    category_query = request.GET.get('category')
-    platform_query = request.GET.get('platform')
+def game_list(request: HttpRequest) -> JsonResponse:
     games = Game.objects.all()
-    if category_query:
+    if category_query := request.GET.get('category'):
         games = games.filter(category__slug=category_query)
-    if platform_query:
+    if platform_query := request.GET.get('platform'):
         games = games.filter(platforms__slug=platform_query)
     serializer = GameSerializer(games, request=request)
     return serializer.json_response()
@@ -27,7 +25,7 @@ def game_list(request):
 
 @assert_method('GET')
 @assert_object_found(Game, with_slug=True)
-def game_detail(request, game_slug):
+def game_detail(request: HttpRequest, game_slug: str) -> JsonResponse:
     game = Game.objects.get(slug=game_slug)
     serializer = GameSerializer(game, request=request)
     return serializer.json_response()
@@ -35,7 +33,7 @@ def game_detail(request, game_slug):
 
 @assert_method('GET')
 @assert_object_found(Game, with_slug=True)
-def review_list(request, game_slug):
+def review_list(request: HttpRequest, game_slug: str) -> JsonResponse:
     game = Game.objects.get(slug=game_slug)
     reviews = game.reviews.all()
     serializer = ReviewSerializer(reviews, request=request)
@@ -44,7 +42,7 @@ def review_list(request, game_slug):
 
 @assert_method('GET')
 @assert_object_found(Review)
-def review_detail(request, review_pk):
+def review_detail(request: HttpRequest, review_pk: int) -> JsonResponse:
     review = Review.objects.get(pk=review_pk)
     serializer = ReviewSerializer(review, request=request)
     return serializer.json_response()
@@ -55,13 +53,12 @@ def review_detail(request, review_pk):
 @get_valid_json_fields('rating', 'comment')
 @assert_token
 @assert_object_found(Game, with_slug=True)
-def add_review(request, game_slug):
+def add_review(request: HttpRequest, game_slug: str) -> JsonResponse:
     rating = request.data['rating']
-    comment = request.data['comment']
-    game = Game.objects.get(slug=game_slug)
-
     if not 1 < rating <= 5:
         return JsonResponse({'error': 'Rating is out of range'}, status=400)
+    comment = request.data['comment']
+    game = Game.objects.get(slug=game_slug)
     review = Review.objects.create(
         comment=comment, rating=rating, game=game, author=request.token.user
     )
