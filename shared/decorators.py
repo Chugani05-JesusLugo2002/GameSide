@@ -71,10 +71,10 @@ def get_valid_json_fields(*fields: str):
 
 def assert_token(func):
     def wrapper(*args, **kwargs):
-        PATTERN = r'^Bearer ([a-fA-F\d]{8}(?:\-[a-fA-F\d]{4}){3}\-[a-fA-F\d]{12})$'
+        TOKEN_PATTERN = r'^Bearer ([a-fA-F\d]{8}(?:\-[a-fA-F\d]{4}){3}\-[a-fA-F\d]{12})$'
         request = args[0]
         auth_header = request.headers.get('Authorization')
-        if token := re.match(PATTERN, auth_header):
+        if token := re.match(TOKEN_PATTERN, auth_header):
             try:
                 request.token = Token.objects.get(key=token[1])
             except Token.DoesNotExist:
@@ -84,6 +84,3 @@ def assert_token(func):
         return func(*args, **kwargs)
 
     return wrapper
-
-
-{'Authorization': 'Bearer 1234'}
